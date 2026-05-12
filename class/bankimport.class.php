@@ -259,6 +259,7 @@ class BankImport
 
 				// TODO : Apparemment createFromFormat ne fonctionne pas si PHP < 5.3 ....
 				$datetime = DateTime::createFromFormat($dateFormat, $data['date']);
+
 				$data['datev'] = ($datetime === false) ? 0 : $datetime->getTimestamp();
 
 				$data['error'] = '';
@@ -421,7 +422,7 @@ class BankImport
 	 */
 	public function import_data($TLine)
 	{
-		global $conf, $db;
+		global $conf, $db, $langs;
 
 		$TLineBackup = $TLine; // car le programme est concue pour scier la branche sur laquelle il est assis
 
