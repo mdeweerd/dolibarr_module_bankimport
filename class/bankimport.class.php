@@ -132,8 +132,8 @@ class BankImport
 			if ($reshook > 0) {
 				print $hookmanager->resPrint;
 				return;
-			} else {
-                setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+			} elseif ($hookmanager->error || !empty($hookmanager->errors)) {
+				setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
             }
 
 		}
@@ -186,8 +186,8 @@ class BankImport
 			if ($reshook > 0) {
 				print $hookmanager->resPrint;
 				return;
-			} else {
-                setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+			} elseif ($hookmanager->error || !empty($hookmanager->errors)) {
+				setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
             }
 		}
 		if(empty($delimiter)) $delimiter = getDolGlobalString('BANKIMPORT_SEPARATOR');
