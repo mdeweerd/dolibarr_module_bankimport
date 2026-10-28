@@ -21,9 +21,9 @@
 	<table class="border" width="100%">
 		<tr>
 			<td width="200"><label class="fieldrequired" for="selectaccountid"><?php echo $langs->trans("BankAccount") ?></label></td>
-			<td><?php  $form->select_comptes( ($import->account) ? $import->account->id : -1,'accountid',0,'courant <> 2',1) ?></td>
+			<td><?php  $form->select_comptes( ($import->account) ? $import->account->id : -1,'accountid',0,'(courant:!=:2)',1) ?></td>
 			<td width="200"><label for="ds"><?php echo $langs->trans("DateStart") ?></label></td>
-			<td><?php echo $form->select_date($import->dateStart, 'ds') ?></td>
+			<td><?php echo method_exists($form, 'selectDate') ? $form->selectDate($import->dateStart, 'ds') : $form->select_date($import->dateStart, 'ds') ?></td>
 			<td><label class="fieldrequired" for="numreleve"><?php echo $langs->trans("AccountStatement") ?></label></td>
 			<td><input type="text" id="numreleve" name="numreleve" value="<?php echo $import->numReleve ?>" /></td>
 		</tr>
@@ -31,7 +31,7 @@
 			<td width="200"><label class="fieldrequired" for="bankimportfile"><?php echo $langs->trans("BankImportFile") ?></label></td>
 			<td><input type="file" id="bankimportfile" name="bankimportfile" /></td>
 			<td width="200"><label for="de"><?php echo $langs->trans("DateEnd") ?></label></td>
-			<td><?php echo $form->select_date($import->dateEnd, 'de') ?></td>
+			<td><?php echo method_exists($form, 'selectDate') ? $form->selectDate($import->dateEnd, 'de') : $form->select_date($import->dateEnd, 'de') ?></td>
 			<td><label for="hasheader"><?php echo $langs->trans("FileHasHeader") ?></label></td>
 			<td><input type="checkbox" id="hasheader" name="hasheader" value="1" <?php echo  getDolGlobalInt('BANKIMPORT_HEADER') ? ' checked="checked"' : '' ?> /></td>
 		</tr>
