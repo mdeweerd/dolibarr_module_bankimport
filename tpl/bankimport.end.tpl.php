@@ -34,7 +34,7 @@
 </table>
 <br />
 <div class="center">
-<a href="<?php echo dol_buildpath('/bankimport/releve.php', 2); ?>?account=<?php echo $import->account->id ?>&amp;num=<?php echo $import->numReleve ?>">
+<a href="<?php echo dol_buildpath('/compta/bank/releve.php', 2); ?>?num=<?php echo $import->numReleve ?>&amp;account=<?php echo $import->account->id ?>">
 	<?php echo $langs->trans('StatementCreatedAndDataImported', $import->numReleve, $import->nbReconciled, $import->nbCreated) ?>
 </a>
 </div>
