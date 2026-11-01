@@ -215,7 +215,7 @@ class BankImport
 			}
 			else {
 				$dataline = fgetcsv($f1, 4096, $delimiter, $enclosure);
-				if (empty($dataline)) continue;
+				if (empty($dataline) || (count($dataline) === 1 && trim((string) $dataline[0]) === '')) continue; // Skip blank lines
 			}
 //		  var_dump($dataline, $delimiter, $enclosure);
 
@@ -298,6 +298,7 @@ class BankImport
 
 		// For each file transaction, we search in Dolibarr bank transaction if there is a match by amount
 		foreach($this->TFile as &$fileLine) {
+			if (!isset($fileLine['amount'])) continue; // Ligne non conforme au mapping (ou vide)
 			$amount = price2num($fileLine['amount']); // Transform to numeric string
 			if(is_numeric($amount)) {
 				$transac = $this->search_dolibarr_transaction_by_amount($amount, $fileLine['label']);
