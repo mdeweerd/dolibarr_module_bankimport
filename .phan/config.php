@@ -57,37 +57,41 @@ return [
 	// .ci/dolibarr-runtime.php, which PHPStan loads through its own
 	// bootstrap. The module lives at the root of the repository: its
 	// entry pages are files, not a directory.
+	// Paths relative to the repository root Phan runs from: Phan
+	// identifies analysed files by exactly these paths, and the
+	// generated baseline (load AND save) keys them the same way.
 	'file_list' => [
-		__DIR__ . '/../.ci/dolibarr-runtime.php',
-		__DIR__ . '/../import.php',
-		__DIR__ . '/../releve.php',
-		__DIR__ . '/../config.php',
-		__DIR__ . '/../config.default.php',
+		'.ci/dolibarr-runtime.php',
+		'import.php',
+		'releve.php',
+		'config.php',
+		'config.default.php',
 	],
 
 	'directory_list' => [
 		// Parsed for context, excluded from analysis below.
-		__DIR__ . '/../dolibarr/htdocs/core',
-		__DIR__ . '/../dolibarr/htdocs/compta/bank/class',
-		__DIR__ . '/../dolibarr/htdocs/compta/facture/class',
-		__DIR__ . '/../dolibarr/htdocs/compta/paiement/class',
-		__DIR__ . '/../dolibarr/htdocs/compta/sociales/class',
-		__DIR__ . '/../dolibarr/htdocs/compta/tva/class',
-		__DIR__ . '/../dolibarr/htdocs/fourn/class',
-		__DIR__ . '/../dolibarr/htdocs/societe/class',
-		__DIR__ . '/../dolibarr/htdocs/adherents/class',
-		__DIR__ . '/../dolibarr/htdocs/custom/abricot/includes/class',
+		'dolibarr/htdocs/core',
+		'dolibarr/htdocs/compta/bank/class',
+		'dolibarr/htdocs/compta/facture/class',
+		'dolibarr/htdocs/compta/paiement/class',
+		'dolibarr/htdocs/compta/sociales/class',
+		'dolibarr/htdocs/compta/tva/class',
+		'dolibarr/htdocs/fourn/class',
+		'dolibarr/htdocs/societe/class',
+		'dolibarr/htdocs/adherents/class',
+		'dolibarr/htdocs/custom/abricot/includes/class',
 		// Analysed.
-		__DIR__ . '/../admin',
-		__DIR__ . '/../class',
-		__DIR__ . '/../core',
-		__DIR__ . '/../lib',
-		__DIR__ . '/../script',
-		__DIR__ . '/../tpl',
+		'admin',
+		'class',
+		'core',
+		'lib',
+		'script',
+		'tpl',
 	],
 
 	'exclude_analysis_directory_list' => [
-		__DIR__ . '/../dolibarr',
+		'dolibarr',
+		'.ci',
 	],
 
 	// Single process: deterministic and within the memory budget of the

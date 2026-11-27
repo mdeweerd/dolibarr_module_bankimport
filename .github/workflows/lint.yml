@@ -36,7 +36,6 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          cache: pip
           python-version: "3.13"
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v6

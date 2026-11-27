@@ -23,7 +23,12 @@ htdocs="${DOLIBARR_HTDOCS:?DOLIBARR_HTDOCS must point at the htdocs directory}"
 port="${SMOKE_PORT:-8080}"
 log="${SMOKE_LOG:-php-server.log}"
 
-php -S "127.0.0.1:${port}" -t "${htdocs}" > "${log}" 2>&1 &
+# Through a router on purpose: the built-in server serves from the
+# document root, while the module pages include main.inc.php through
+# paths relative to their own directory. The router moves to the
+# directory of the requested script first, the way Apache serves.
+router="$(cd "$(dirname "$0")" && pwd)/smoke-router.php"
+php -S "127.0.0.1:${port}" -t "${htdocs}" "${router}" > "${log}" 2>&1 &
 server=$!
 trap 'kill "${server}" 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do
