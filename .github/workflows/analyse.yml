@@ -179,7 +179,9 @@ jobs:
           # is green once the step below has committed it.
           if [ ! -f .phan/baseline.txt ]; then
             echo "No Phan baseline yet: generating it."
-            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
+            # --save-baseline exits 1 when findings exist: the load run
+            # below is what decides, so do not fail the step here.
+            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log || true
           else
             php -d memory_limit=2G phan.phar --no-progress-bar --load-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
           fi

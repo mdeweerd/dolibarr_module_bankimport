@@ -5,7 +5,7 @@
 # retagged with install/step5.php, conf.php with forced authentication)
 # follows mdeweerd/dolibarr-mcp (.github/workflows/integration.yml),
 # adapted to a PHP module: the repository root IS the module, deployed
-# as a symlink in htdocs/custom the way a developer does it.
+# as a real copy in htdocs/custom the way a developer does it.
 name: test
 permissions:
   contents: read
@@ -171,8 +171,15 @@ jobs:
 
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.
-      - name: Deploy the module the way a developer does it
-        run: ln -sfn "${GITHUB_WORKSPACE}" "${DOLIBARR_HTDOCS}/custom/${MODULE}"
+      # A real copy, not a symlink: module pages include main.inc.php
+      # through a relative path ("../../main.inc.php") that PHP
+      # resolves against the real script directory, and a symlink
+      # would leave that directory outside htdocs.
+      - name: Deploy the module as a real copy
+        run: |
+          mkdir -p "${DOLIBARR_HTDOCS}/custom/${MODULE}"
+          tar -C "${GITHUB_WORKSPACE}" --exclude=.git -cf - . \
+            | tar -C "${DOLIBARR_HTDOCS}/custom/${MODULE}" -xf -
 
       # Activates the module the way Home - Setup - Modules does (which
       # replays the activation data), then grants the module rights to

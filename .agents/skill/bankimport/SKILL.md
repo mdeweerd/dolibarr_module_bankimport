@@ -15,7 +15,7 @@ Load and follow this file before touching anything in this repository.
   analyser stubs in .ci/, analysers configured by phpstan.neon.dist and
   .phan/config.php.
 - The module lives at the ROOT of this repository; in CI it is deployed
-  as a symlink into htdocs/custom/bankimport/ (test.yml).
+  as a real copy into htdocs/custom/bankimport/ (test.yml).
 
 ## Pinned references
 
