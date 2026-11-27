@@ -4,9 +4,9 @@ Steps in progress only - completed work lives in the git history and in
 the action log. Anything not yet actionable belongs to PLAN.md or to an
 issue, not here.
 
-- [ ] Run the analyse workflow on this branch (Actions - analyse - Run
-      workflow): it generates phpstan-baseline.neon and .phan/baseline.txt
-      and fails once on purpose.
-- [ ] Download the two baseline artifacts and commit them on the branch.
-- [ ] Run the lint and test workflows on the branch, fix what they
-      reveal, then open the pull request to main (PLAN.md, Phase 0).
+- [ ] Watch the first pipeline run on the pull request (lint, analyse,
+      test): the analyse workflow generates the two baselines and
+      commits them to the branch itself; fix what the run reveals,
+      if anything.
+- [ ] Check the three workflows green after the baseline commits, then
+      merge the pull request (PLAN.md, Phase 0).

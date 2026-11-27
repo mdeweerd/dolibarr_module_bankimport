@@ -8,12 +8,16 @@
       placeholder phpstan-baseline.neon, docs/SPECIFICATION.md, TODO.md
       and the project skill.
       Acceptance: every job starts; the analysers generate their
-      baselines and fail exactly once on purpose.
+      baselines, commit them and pass from them.
       Done (bootstrap commit): the files landed; the whitespace and
       end-of-file cleanup of the existing files made the pre-commit
       fixers pass from the first run.
-- [ ] Commit the generated baselines from the artifacts
-      (phpstan-baseline.neon, .phan/baseline.txt) and re-run.
+- [ ] Commit the generated baselines and re-run.
+      The analyse workflow does it itself: its first run on a branch
+      generates phpstan-baseline.neon and .phan/baseline.txt and
+      pushes them to the branch with the workflow token (a commit
+      made by that token never triggers another run, so there is no
+      loop).
       Acceptance: analyse.yml green, failing only on new findings.
 - [ ] Run the whole pipeline on the branch, fix what it reveals, then
       open the pull request to main.
