@@ -1,0 +1,154 @@
+# Static analysis of the module against the Dolibarr core it targets:
+# PHPStan (2.x) and Phan (6.x), each in its own job. The analysers never
+# execute the Dolibarr entry script; the symbols it defines only at
+# runtime come from .ci/dolibarr-runtime.php, loaded by both configs
+# (PHPStan via .ci/phpstan-bootstrap.php, Phan via its file_list).
+#
+# The module is existing code being brought under analysis, so each
+# analyser works from a generated baseline: only NEW findings fail the
+# job. The first run on this branch generates the two baselines, uploads
+# them as artifacts and fails once on purpose so they get committed (see
+# PLAN.md, Phase 0); from then on the committed baselines decide and
+# shrink as findings are lifted.
+name: analyse
+permissions:
+  contents: read
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  # Dolibarr core checkout the module is analysed against (branch or tag).
+  DOLIBARR_REF: "24.0"
+  # The abricot library the module loads at activation and on its
+  # pages (TPDOdb, TObjetStd). The ATM upstream repository is not
+  # fetchable anymore; the pinned public mirror below carries the
+  # same core (see PLAN.md).
+  ABRICOT_REF: "1acc35a1f3aabf41aa1888c41d6359d374b34dc4"
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          coverage: none
+      # The Dolibarr checkout IS the cache: nothing core-side is redone
+      # per pipeline as long as the ref does not change.
+      - name: Restore the Dolibarr core checkout from cache
+        id: core-cache
+        uses: actions/cache@v6
+        with:
+          path: dolibarr/
+          key: analyse-dolibarr-24.0-abricot-v1
+          restore-keys: |
+            analyse-dolibarr-24.0-
+      - name: Download the Dolibarr core (cache miss only)
+        if: steps.core-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -sSLo dolibarr.tar.gz "https://codeload.github.com/Dolibarr/dolibarr/tar.gz/${DOLIBARR_REF}"
+          mkdir -p dolibarr
+          tar -xzf dolibarr.tar.gz -C dolibarr --strip-components=1
+      # The module code extends the abricot classes; they must sit in the
+      # scanned tree. The restore key may predate the abricot pin, so the
+      # download runs whenever the library is missing, not only on a
+      # full cache miss.
+      - name: Deploy abricot into the Dolibarr tree (when missing)
+        run: |
+          set -euo pipefail
+          if [ ! -f dolibarr/htdocs/custom/abricot/inc.core.php ]; then
+            mkdir -p dolibarr/htdocs/custom/abricot
+            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+              -o abricot.tar.gz \
+              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
+            tar -xzf abricot.tar.gz -C dolibarr/htdocs/custom/abricot --strip-components=1
+            rm -f abricot.tar.gz
+          fi
+
+      - name: PHPStan
+        run: |
+          set -euo pipefail
+          curl -fsSLo phpstan.phar https://github.com/phpstan/phpstan/releases/latest/download/phpstan.phar
+          # Baseline bootstrap: the committed placeholder means no
+          # snapshot exists yet. Generate it, then fail once so it gets
+          # committed from the artifact (PLAN.md, Phase 0).
+          if grep -q 'PLACEHOLDER' phpstan-baseline.neon 2>/dev/null; then
+            echo "No PHPStan baseline yet: generating it (commit phpstan-baseline.neon from the artifact)."
+            php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G --generate-baseline || true
+            exit 1
+          fi
+          php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G
+      - name: Provide the generated baseline as artifact
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: phpstan-baseline
+          path: phpstan-baseline.neon
+          retention-days: 7
+
+  phan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          # ast: Phan refuses the slower polyfill parse without it.
+          php-version: "8.3"
+          extensions: ast
+          coverage: none
+      - name: Restore the Dolibarr core checkout from cache
+        id: core-cache
+        uses: actions/cache@v6
+        with:
+          path: dolibarr/
+          key: analyse-dolibarr-24.0-abricot-v1
+          restore-keys: |
+            analyse-dolibarr-24.0-
+      - name: Download the Dolibarr core (cache miss only)
+        if: steps.core-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+          curl -sSLo dolibarr.tar.gz "https://codeload.github.com/Dolibarr/dolibarr/tar.gz/${DOLIBARR_REF}"
+          mkdir -p dolibarr
+          tar -xzf dolibarr.tar.gz -C dolibarr --strip-components=1
+      # The module code extends the abricot classes; they must sit in the
+      # scanned tree. The restore key may predate the abricot pin, so the
+      # download runs whenever the library is missing, not only on a
+      # full cache miss.
+      - name: Deploy abricot into the Dolibarr tree (when missing)
+        run: |
+          set -euo pipefail
+          if [ ! -f dolibarr/htdocs/custom/abricot/inc.core.php ]; then
+            mkdir -p dolibarr/htdocs/custom/abricot
+            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
+              -o abricot.tar.gz \
+              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
+            tar -xzf abricot.tar.gz -C dolibarr/htdocs/custom/abricot --strip-components=1
+            rm -f abricot.tar.gz
+          fi
+
+      - name: Phan
+        run: |
+          set -euo pipefail
+          curl -fsSLo phan.phar https://github.com/phan/phan/releases/latest/download/phan.phar
+          # Baseline bootstrap: no committed baseline means no snapshot
+          # exists yet. Generate it, then fail once so it gets committed
+          # from the artifact (PLAN.md, Phase 0).
+          if [ ! -f .phan/baseline.txt ]; then
+            echo "No Phan baseline yet: generating it (commit .phan/baseline.txt from the artifact)."
+            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt || true
+            exit 1
+          fi
+          php -d memory_limit=2G phan.phar --no-progress-bar --load-baseline .phan/baseline.txt
+      - name: Provide the generated baseline as artifact
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: phan-baseline
+          path: .phan/baseline.txt
+          retention-days: 7

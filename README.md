@@ -11,4 +11,3 @@ Import banque
 
 Module complémentaire Dolibarr. A activer dans Accueil > Configuration > Modules > Modules complémentaires > Outils multi-modules.
 Permet d'importer des fichiers csv provenant de la banque afin de réaliser automatiquement les rapprochements et de créer les écritures manquantes.
-

@@ -1,0 +1,8 @@
+# PLACEHOLDER: no PHPStan baseline has been generated yet.
+# .github/workflows/analyse.yml detects this file on its first run,
+# replaces it with `phpstan --generate-baseline` and uploads it as an
+# artifact; commit the downloaded file so only new findings fail the
+# job from then on (PLAN.md, Phase 0). Its shrinking size is the
+# progress bar of the port backlog.
+parameters:
+	ignoreErrors: []
