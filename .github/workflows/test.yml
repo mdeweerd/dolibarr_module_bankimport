@@ -230,7 +230,7 @@ jobs:
         run: |
           set -uo pipefail
           if [ ! -s page-smoke.log ]; then exit 0; fi
-          grep -aE 'ERROR:' page-smoke.log | head -12 > /tmp/smoke-lines.log
+          grep -aE 'ERROR:|PHP Fatal|PHP Parse|Uncaught' page-smoke.log | head -12 > /tmp/smoke-lines.log || true
           if [ ! -s /tmp/smoke-lines.log ]; then tail -12 page-smoke.log > /tmp/smoke-lines.log; fi
           cut -c1-400 /tmp/smoke-lines.log | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 

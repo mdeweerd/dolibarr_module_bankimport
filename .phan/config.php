@@ -14,7 +14,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
- *
+
+/**
  * Phan config for the module of this repository - Phan 6.x (latest). Run
  * from the repository root with the Dolibarr core checkout in dolibarr/
  * (see .github/workflows/analyse.yml). Adapted from the Dolibarr core
