@@ -87,11 +87,23 @@ jobs:
           # Baseline bootstrap: the committed placeholder means no
           # snapshot exists yet. Generate it, then analyse from it so
           # the job is green once the step below has committed it.
+          # 2>&1 on purpose: the annotations step below needs a crash
+          # report in the log, not only on the raw console.
           if grep -q 'PLACEHOLDER' phpstan-baseline.neon 2>/dev/null; then
             echo "No PHPStan baseline yet: generating it."
-            php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G --generate-baseline
+            php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G --generate-baseline 2>&1 | tee /tmp/phpstan.log
+          else
+            php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G 2>&1 | tee /tmp/phpstan.log
           fi
-          php phpstan.phar analyse -c phpstan.neon.dist --no-progress --memory-limit=2G
+      - name: Surface the PHPStan failure as annotations
+        if: failure()
+        run: |
+          set -uo pipefail
+          if [ ! -s /tmp/phpstan.log ]; then
+            echo "::error::PHPStan produced no readable output; see the raw log of the run"
+            exit 0
+          fi
+          tail -12 /tmp/phpstan.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
       - name: Commit the freshly generated baseline (when it changed)
         run: |
           set -euo pipefail
@@ -167,9 +179,19 @@ jobs:
           # is green once the step below has committed it.
           if [ ! -f .phan/baseline.txt ]; then
             echo "No Phan baseline yet: generating it."
-            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt
+            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
+          else
+            php -d memory_limit=2G phan.phar --no-progress-bar --load-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
           fi
-          php -d memory_limit=2G phan.phar --no-progress-bar --load-baseline .phan/baseline.txt
+      - name: Surface the Phan failure as annotations
+        if: failure()
+        run: |
+          set -uo pipefail
+          if [ ! -s /tmp/phan.log ]; then
+            echo "::error::Phan produced no readable output; see the raw log of the run"
+            exit 0
+          fi
+          tail -12 /tmp/phan.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
       - name: Commit the freshly generated baseline (when it changed)
         run: |
           set -euo pipefail

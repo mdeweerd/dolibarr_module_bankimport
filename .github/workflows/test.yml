@@ -144,7 +144,15 @@ jobs:
       # Through bash on purpose: the executable bit in git never decides
       # the job (run, not rely).
       - name: Load demo database and configure the instance
-        run: bash .ci/scripts/setup-test-instance.sh
+        run: |
+          set -o pipefail
+          bash .ci/scripts/setup-test-instance.sh 2>&1 | tee setup-test-instance.log
+      - name: Surface the instance setup failure as annotations
+        if: failure()
+        run: |
+          set -uo pipefail
+          if [ ! -s setup-test-instance.log ]; then exit 0; fi
+          tail -12 setup-test-instance.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 
       # The module loads abricot at activation and on its pages; the
       # restore key may predate the abricot pin, so the download runs
@@ -170,7 +178,15 @@ jobs:
       # replays the activation data), then grants the module rights to
       # the CI user, who does not implicitly hold them as an admin.
       - name: Activate the module and grant its rights
-        run: php .ci/scripts/activate-module.php
+        run: |
+          set -o pipefail
+          php .ci/scripts/activate-module.php 2>&1 | tee activate-module.log
+      - name: Surface the activation failure as annotations
+        if: failure()
+        run: |
+          set -uo pipefail
+          if [ ! -s activate-module.log ]; then exit 0; fi
+          tail -12 activate-module.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 
       # One process per test file: a fatal in one file takes that file
       # down, not the whole suite. The test files bootstrap themselves
@@ -206,7 +222,17 @@ jobs:
       # body or the server log, and the marker of the feature on each
       # module page (a forbidden zone answers 200 as well).
       - name: Page smoke
-        run: bash .ci/scripts/smoke-pages.sh
+        run: |
+          set -o pipefail
+          bash .ci/scripts/smoke-pages.sh 2>&1 | tee page-smoke.log
+      - name: Surface the page smoke failure as annotations
+        if: failure()
+        run: |
+          set -uo pipefail
+          if [ ! -s page-smoke.log ]; then exit 0; fi
+          grep -aE 'ERROR:' page-smoke.log | head -12 > /tmp/smoke-lines.log
+          if [ ! -s /tmp/smoke-lines.log ]; then tail -12 page-smoke.log > /tmp/smoke-lines.log; fi
+          cut -c1-400 /tmp/smoke-lines.log | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 
       - name: Provide server log as artifact
         uses: actions/upload-artifact@v7
