@@ -14,7 +14,7 @@ All notable changes to this project will be documented in this file.
 - FIX : Compat v21 *07/01/2025* - 2.7.1
 - FIX : Compat v20
   Changed Dolibarr compatibility range to 16 min - 20 max - *04/08/2024* - 2.7.0
- 
+
 ## Release 2.6
 - FIX : Ticket DA025234 - Fix undefined variable in conf.php - *11/07/2024* - 2.6.3
 - FIX : Ticket DA024988 - bankline date was convert twice - *24/05/2024* - 2.6.2
@@ -46,4 +46,3 @@ All notable changes to this project will be documented in this file.
 - NEW : Automatic bank statement reconciliation *16/09/2013* - 1.0
 - NEW : Automatic bank transaction creation when missing *16/09/2013* - 1.0
 - NEW : Date format, file separator and file mapping can be defined in setup *16/09/2013* - 1.0
-
