@@ -23,6 +23,7 @@ require_once DOL_DOCUMENT_ROOT . '/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT . '/adherents/class/adherent.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/sociales/class/chargesociales.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/hookmanager.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 
 class BankImport
 {
@@ -427,7 +428,6 @@ class BankImport
 
 		$TLineBackup = $TLine; // car le programme est concue pour scier la branche sur laquelle il est assis
 
-		$PDOdb = new TPDOdb;
 		if (!empty($TLine['piece']))
 		{
 			dol_include_once('/compta/paiement/class/paiement.class.php');
@@ -510,7 +510,7 @@ class BankImport
 			$this->reconcile_bank_transaction($this->TBank[$bankLineId], $this->TFile[$iFileLine]);
 			if (getDolGlobalString('BANKIMPORT_HISTORY_IMPORT') && $bankLineId > 0)
 			{
-				$this->insertHistoryLine($PDOdb, $iFileLine, $bankLineId);
+				$this->insertHistoryLine($iFileLine, $bankLineId);
 			}
 		}
 	}
@@ -682,21 +682,23 @@ class BankImport
 
 	}
 
-	private function insertHistoryLine(&$PDOdb, $iFileLine, $fk_bank)
+	private function insertHistoryLine($iFileLine, $fk_bank)
 	{
+		global $user;
+
 		if (!empty($this->hasHeader) && !empty($this->TOriginLine[$iFileLine]))
 		{
 			$header = $this->parseHeader($this->lineHeader);
 			$line = $this->parseLine($this->TOriginLine[$iFileLine]);
 
-			$historyLine = new TBankImportHistory;
+			$historyLine = new TBankImportHistory($this->db);
 
 			$historyLine->num_releve = $this->numReleve;
 			$historyLine->fk_bank = $fk_bank;
 			$historyLine->line_imported_title = $header;
 			$historyLine->line_imported_value = $line;
 
-			$historyLine->save($PDOdb);
+			$historyLine->create($user);
 		}
 	}
 
@@ -792,19 +794,85 @@ class BankImport
 }
 
 
-class TBankImportHistory extends TObjetStd
+class TBankImportHistory extends CommonObject
 {
-	function __construct()
+	/**
+	 * @var string Name of element
+	 */
+	public $element = 'bankimport_history';
+
+	/**
+	 * @var string Name of table without prefix
+	 */
+	public $table_element = 'bankimport_history';
+
+	/**
+	 * @var array Definition of fields (same columns as the historical abricot-created table)
+	 */
+	public $fields = array(
+		'rowid' => array('type' => 'integer', 'label' => 'TechnicalID', 'enabled' => 1, 'visible' => 0, 'notnull' => 1, 'index' => 1, 'position' => 1),
+		'date_cre' => array('type' => 'datetime', 'label' => 'DateCreation', 'enabled' => 1, 'visible' => 0, 'notnull' => 0, 'position' => 10),
+		'date_maj' => array('type' => 'datetime', 'label' => 'DateModification', 'enabled' => 1, 'visible' => 0, 'notnull' => 0, 'position' => 11),
+		'num_releve' => array('type' => 'varchar(50)', 'label' => 'NumReleve', 'enabled' => 1, 'visible' => 1, 'notnull' => 0, 'index' => 1, 'position' => 20),
+		'fk_bank' => array('type' => 'integer', 'label' => 'FkBank', 'enabled' => 1, 'visible' => 1, 'notnull' => 1, 'default' => '0', 'index' => 1, 'position' => 30),
+		'line_imported_title' => array('type' => 'text', 'label' => 'LineImportedTitle', 'enabled' => 1, 'visible' => 0, 'notnull' => 0, 'position' => 40),
+		'line_imported_value' => array('type' => 'text', 'label' => 'LineImportedValue', 'enabled' => 1, 'visible' => 0, 'notnull' => 0, 'position' => 50),
+	);
+
+	/**
+	 * @param DoliDB $db Database handler
+	 */
+	public function __construct($db)
 	{
-		$this->set_table( MAIN_DB_PREFIX.'bankimport_history' );
-
-		$this->add_champs('num_releve',array('type'=>'varchar','length'=>50,'index'=>true));
-		$this->add_champs('fk_bank',array('type'=>'integer','index'=>true));
-        $this->add_champs('line_imported_title,line_imported_value', array('type'=>'array'));
-
-        $this->_init_vars();
-
-	    $this->start();
+		$this->db = $db;
 	}
 
+	/**
+	 * Create history line into database (array fields are stored serialized, as before)
+	 *
+	 * @param User $user User that creates
+	 * @param int  $notrigger 0=launch triggers, 1=disable triggers
+	 * @return int <0 if KO, id of created object if OK
+	 */
+	public function create($user, $notrigger = 0)
+	{
+		$this->date_cre = dol_now();
+		$this->date_maj = dol_now();
+
+		$this->line_imported_title = serialize($this->line_imported_title);
+		$this->line_imported_value = serialize($this->line_imported_value);
+
+		return $this->createCommon($user, $notrigger);
+	}
+
+	/**
+	 * Load history line from database (array fields are unserialized)
+	 *
+	 * @param int $id Id of line
+	 * @return int <0 if KO, 0 if not found, >0 if OK
+	 */
+	public function fetch($id)
+	{
+		$res = $this->fetchCommon($id, null, '', 1);
+		if ($res > 0) {
+			foreach (array('line_imported_title', 'line_imported_value') as $field) {
+				if (is_string($this->{$field})) {
+					$unserialized = @unserialize($this->{$field});
+					if ($unserialized !== false) {
+						$this->{$field} = $unserialized;
+					}
+				}
+			}
+		}
+
+		return $res;
+	}
+
+	/**
+	 * @return int Id of object (replaces abricot TObjetStd::getId())
+	 */
+	public function getId()
+	{
+		return (int) $this->id;
+	}
 }
