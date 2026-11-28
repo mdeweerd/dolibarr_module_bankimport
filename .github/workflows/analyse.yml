@@ -25,11 +25,6 @@ on:
 env:
   # Dolibarr core checkout the module is analysed against (branch or tag).
   DOLIBARR_REF: "24.0"
-  # The abricot library the module loads at activation and on its
-  # pages (TPDOdb, TObjetStd). The ATM upstream repository is not
-  # fetchable anymore; the pinned public mirror below carries the
-  # same core (see PLAN.md).
-  ABRICOT_REF: "1acc35a1f3aabf41aa1888c41d6359d374b34dc4"
 
 jobs:
   phpstan:
@@ -64,21 +59,6 @@ jobs:
           curl -sSLo dolibarr.tar.gz "https://codeload.github.com/Dolibarr/dolibarr/tar.gz/${DOLIBARR_REF}"
           mkdir -p dolibarr
           tar -xzf dolibarr.tar.gz -C dolibarr --strip-components=1
-      # The module code extends the abricot classes; they must sit in the
-      # scanned tree. The restore key may predate the abricot pin, so the
-      # download runs whenever the library is missing, not only on a
-      # full cache miss.
-      - name: Deploy abricot into the Dolibarr tree (when missing)
-        run: |
-          set -euo pipefail
-          if [ ! -f dolibarr/htdocs/custom/abricot/inc.core.php ]; then
-            mkdir -p dolibarr/htdocs/custom/abricot
-            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
-              -o abricot.tar.gz \
-              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
-            tar -xzf abricot.tar.gz -C dolibarr/htdocs/custom/abricot --strip-components=1
-            rm -f abricot.tar.gz
-          fi
 
       - name: PHPStan
         run: |
@@ -154,32 +134,21 @@ jobs:
           curl -sSLo dolibarr.tar.gz "https://codeload.github.com/Dolibarr/dolibarr/tar.gz/${DOLIBARR_REF}"
           mkdir -p dolibarr
           tar -xzf dolibarr.tar.gz -C dolibarr --strip-components=1
-      # The module code extends the abricot classes; they must sit in the
-      # scanned tree. The restore key may predate the abricot pin, so the
-      # download runs whenever the library is missing, not only on a
-      # full cache miss.
-      - name: Deploy abricot into the Dolibarr tree (when missing)
-        run: |
-          set -euo pipefail
-          if [ ! -f dolibarr/htdocs/custom/abricot/inc.core.php ]; then
-            mkdir -p dolibarr/htdocs/custom/abricot
-            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
-              -o abricot.tar.gz \
-              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
-            tar -xzf abricot.tar.gz -C dolibarr/htdocs/custom/abricot --strip-components=1
-            rm -f abricot.tar.gz
-          fi
 
       - name: Phan
         run: |
           set -euo pipefail
           curl -fsSLo phan.phar https://github.com/phan/phan/releases/latest/download/phan.phar
-          # Baseline bootstrap: no committed baseline means no snapshot
-          # exists yet. Generate it, then analyse from it so the job
-          # is green once the step below has committed it.
-          if [ ! -f .phan/baseline.txt ]; then
+          # Baseline bootstrap: a missing or empty committed baseline
+          # means no snapshot exists yet (the rebase onto the
+          # rewritten module resets both baselines that way). Generate
+          # it, then analyse from it so the job is green once the
+          # step below has committed it.
+          if [ ! -s .phan/baseline.txt ]; then
             echo "No Phan baseline yet: generating it."
-            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
+            # --save-baseline exits 1 when findings exist: the load run
+            # below is what decides, so do not fail the step here.
+            php -d memory_limit=2G phan.phar --no-progress-bar --save-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log || true
           else
             php -d memory_limit=2G phan.phar --no-progress-bar --load-baseline .phan/baseline.txt 2>&1 | tee /tmp/phan.log
           fi

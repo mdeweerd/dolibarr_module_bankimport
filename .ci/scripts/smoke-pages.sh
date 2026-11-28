@@ -23,7 +23,13 @@ htdocs="${DOLIBARR_HTDOCS:?DOLIBARR_HTDOCS must point at the htdocs directory}"
 port="${SMOKE_PORT:-8080}"
 log="${SMOKE_LOG:-php-server.log}"
 
-php -S "127.0.0.1:${port}" -t "${htdocs}" > "${log}" 2>&1 &
+# Through a router on purpose: the built-in server serves from the
+# directory it was started in, while the module pages include
+# main.inc.php through paths relative to their own directory. The
+# router runs each requested page from the directory of that page,
+# the way Apache serves.
+router="$(cd "$(dirname "$0")" && pwd)/smoke-router.php"
+php -S "127.0.0.1:${port}" -t "${htdocs}" "${router}" > "${log}" 2>&1 &
 server=$!
 trap 'kill "${server}" 2>/dev/null || true' EXIT
 for _ in $(seq 1 30); do
@@ -32,6 +38,13 @@ for _ in $(seq 1 30); do
 	fi
 	sleep 1
 done
+
+# What the served pages will gate on: a fresh CLI process reads the
+# same instance the way the pages do. A page that answers 200 without
+# its marker while this prints the module on points at the page path,
+# not at the activation, so keep the precheck output next to the
+# failures.
+php "$(dirname "$0")/smoke-precheck.php" || true
 
 # Core pages first, then the pages of the module; the module pages are
 # read as user 1, who holds the module rights after
@@ -77,7 +90,11 @@ for page in "${pages[@]}"; do
 			*/bankimport_setup.php) expect='BANKIMPORT_SEPARATOR' ;;
 		esac
 		if [ -n "${expect}" ] && ! grep -qF -- "${expect}" "${body}"; then
-			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing)"
+			# The page text says what the markers cannot: an empty shell
+			# of main.inc.php, a forbidden zone or an unexpected answer all
+			# look the same without it.
+			text=$(perl -0777 -pe 's/<script\b[^>]*>.*?<\/script>//gs; s/<style\b[^>]*>.*?<\/style>//gs' "${body}" | sed 's/<[^>]*>/ /g' | tr -s ' \t\n\r' ' ' | cut -c1-340)
+			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing): ${text}"
 			failed=1
 		else
 			echo "  200  ${page}  ($(wc -c < "${body}") bytes)"

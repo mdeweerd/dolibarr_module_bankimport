@@ -1,18 +1,19 @@
+<?php
 /* Copyright (C) 2025 ATM Consulting
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */?>
 
 <table class="border" width="100%">
 	<tr>
@@ -124,7 +125,7 @@
 					<?php
 
 					$comboName = 'TLine[fk_soc]['.$i.']';
-					$line['code_client'] = trim($line['code_client']);
+					$line['code_client'] = trim($line['code_client']??'');
 
 					$res = $db->query("SELECT rowid, nom FROM ".MAIN_DB_PREFIX."societe
 							WHERE code_compta='".$db->escape($line['code_client'])."' OR code_compta_fournisseur='".$db->escape($line['code_client'])."'

@@ -5,7 +5,7 @@
 # retagged with install/step5.php, conf.php with forced authentication)
 # follows mdeweerd/dolibarr-mcp (.github/workflows/integration.yml),
 # adapted to a PHP module: the repository root IS the module, deployed
-# as a symlink in htdocs/custom the way a developer does it.
+# as a real copy in htdocs/custom the way a developer does it.
 name: test
 permissions:
   contents: read
@@ -26,11 +26,6 @@ env:
   MODULE: bankimport
   MODULE_CLASS: modBankImport
   RIGHTS_CLASS: bankimport
-  # The abricot library the module loads at activation and on its
-  # pages (TPDOdb, TObjetStd). The ATM upstream repository is not
-  # fetchable anymore; the pinned public mirror below carries the
-  # same core (see PLAN.md).
-  ABRICOT_REF: "1acc35a1f3aabf41aa1888c41d6359d374b34dc4"
 
   DB_HOST: 127.0.0.1
   DB_PORT: "3306"
@@ -154,25 +149,17 @@ jobs:
           if [ ! -s setup-test-instance.log ]; then exit 0; fi
           tail -12 setup-test-instance.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 
-      # The module loads abricot at activation and on its pages; the
-      # restore key may predate the abricot pin, so the download runs
-      # whenever the library is missing.
-      - name: Deploy abricot into the Dolibarr tree (when missing)
-        run: |
-          set -euo pipefail
-          if [ ! -f "${DOLIBARR_HTDOCS}/custom/abricot/inc.core.php" ]; then
-            mkdir -p "${DOLIBARR_HTDOCS}/custom/abricot"
-            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
-              -o /tmp/abricot.tar.gz \
-              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
-            tar -xzf /tmp/abricot.tar.gz -C "${DOLIBARR_HTDOCS}/custom/abricot" --strip-components=1
-            rm -f /tmp/abricot.tar.gz
-          fi
-
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.
-      - name: Deploy the module the way a developer does it
-        run: ln -sfn "${GITHUB_WORKSPACE}" "${DOLIBARR_HTDOCS}/custom/${MODULE}"
+      # A real copy, not a symlink: module pages include main.inc.php
+      # through a relative path ("../../main.inc.php") that PHP
+      # resolves against the real script directory, and a symlink
+      # would leave that directory outside htdocs.
+      - name: Deploy the module as a real copy
+        run: |
+          mkdir -p "${DOLIBARR_HTDOCS}/custom/${MODULE}"
+          tar -C "${GITHUB_WORKSPACE}" --exclude=.git -cf - . \
+            | tar -C "${DOLIBARR_HTDOCS}/custom/${MODULE}" -xf -
 
       # Activates the module the way Home - Setup - Modules does (which
       # replays the activation data), then grants the module rights to
@@ -230,7 +217,7 @@ jobs:
         run: |
           set -uo pipefail
           if [ ! -s page-smoke.log ]; then exit 0; fi
-          grep -aE 'ERROR:' page-smoke.log | head -12 > /tmp/smoke-lines.log
+          grep -aE 'ERROR:|Precheck:|PHP Fatal|PHP Parse|Uncaught' page-smoke.log | head -12 > /tmp/smoke-lines.log || true
           if [ ! -s /tmp/smoke-lines.log ]; then tail -12 page-smoke.log > /tmp/smoke-lines.log; fi
           cut -c1-400 /tmp/smoke-lines.log | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 

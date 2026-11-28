@@ -1,30 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: admin/bankimport_about.php
-
-		-
-			message: '#^Constant DOL_URL_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: admin/bankimport_about.php
-
-		-
-			message: '#^Function llxFooter not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: admin/bankimport_about.php
-
-		-
-			message: '#^Function llxHeader not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: admin/bankimport_about.php
-
-		-
 			message: '#^Negated boolean expression is always true\.$#'
 			identifier: booleanNot.alwaysTrue
 			count: 1
@@ -33,30 +9,6 @@ parameters:
 		-
 			message: '#^Call to function header\(\) with incorrect case\: Header$#'
 			identifier: function.nameCase
-			count: 1
-			path: admin/bankimport_setup.php
-
-		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: admin/bankimport_setup.php
-
-		-
-			message: '#^Constant DOL_URL_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: admin/bankimport_setup.php
-
-		-
-			message: '#^Function llxFooter not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: admin/bankimport_setup.php
-
-		-
-			message: '#^Function llxHeader not found\.$#'
-			identifier: function.notFound
 			count: 1
 			path: admin/bankimport_setup.php
 
@@ -73,21 +25,9 @@ parameters:
 			path: admin/bankimport_setup.php
 
 		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 6
-			path: class/bankimport.class.php
-
-		-
 			message: '#^Constant DOL_VERSION not found\.$#'
 			identifier: constant.notFound
 			count: 1
-			path: class/bankimport.class.php
-
-		-
-			message: '#^Constant MAIN_DB_PREFIX not found\.$#'
-			identifier: constant.notFound
-			count: 3
 			path: class/bankimport.class.php
 
 		-
@@ -451,12 +391,6 @@ parameters:
 			path: class/bankimport.class.php
 
 		-
-			message: '#^Method BankImport\:\:insertHistoryLine\(\) has parameter \$PDOdb with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: class/bankimport.class.php
-
-		-
 			message: '#^Method BankImport\:\:insertHistoryLine\(\) has parameter \$fk_bank with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -625,6 +559,36 @@ parameters:
 			path: class/bankimport.class.php
 
 		-
+			message: '#^Method TBankImportHistory\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method TBankImportHistory\:\:fetch\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int \<0 if KO, 0 if not found, \>0 if OK\)\: Unexpected token "if", expected ''\>'' at offset 125 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int \<0 if KO, id of created object if OK\)\: Unexpected token "if", expected ''\>'' at offset 218 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc type array of property TBankImportHistory\:\:\$fields is not covariant with PHPDoc type array\<string, array\{type\: string, label\: string, enabled\: int\<0, 2\>\|string, position\: int, visible\: int\<\-6, 6\>\|string, langfile\?\: string, notnull\?\: int\<\-1, 1\>, noteditable\?\: int\<0, 1\>, \.\.\.\}\> of overridden property CommonObject\:\:\$fields\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: class/bankimport.class.php
+
+		-
 			message: '#^Parameter \#2 \$callback of function preg_replace_callback expects callable\(array\<string\>\)\: string, ''BankImport\:…'' given\.$#'
 			identifier: argument.type
 			count: 1
@@ -715,6 +679,12 @@ parameters:
 			path: class/bankimport.class.php
 
 		-
+			message: '#^Property TBankImportHistory\:\:\$fields type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
 			message: '#^Result of && is always false\.$#'
 			identifier: booleanAnd.alwaysFalse
 			count: 2
@@ -747,12 +717,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property bankimport\\TechATM\:\:\$data\.$#'
 			identifier: property.notFound
-			count: 2
-			path: class/techatm.class.php
-
-		-
-			message: '#^Constant DOL_DATA_ROOT not found\.$#'
-			identifier: constant.notFound
 			count: 2
 			path: class/techatm.class.php
 
@@ -811,12 +775,6 @@ parameters:
 			path: class/techatm.class.php
 
 		-
-			message: '#^Property bankimport\\TechATM\:\:\$db \(bankimport\\DoliDb\) does not accept bankimport\\DoliDB\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: class/techatm.class.php
-
-		-
 			message: '#^Property bankimport\\TechATM\:\:\$http_response_header \(bankimport\\http_response_header\) does not accept list\<string\>\.$#'
 			identifier: assign.propertyType
 			count: 2
@@ -841,44 +799,8 @@ parameters:
 			path: config.default.php
 
 		-
-			message: '#^Variable \$dolibarr_main_db_host might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: config.default.php
-
-		-
-			message: '#^Variable \$dolibarr_main_db_name might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: config.default.php
-
-		-
-			message: '#^Variable \$dolibarr_main_db_pass might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: config.default.php
-
-		-
-			message: '#^Variable \$dolibarr_main_db_type might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: config.default.php
-
-		-
-			message: '#^Variable \$dolibarr_main_db_user might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: config.default.php
-
-		-
 			message: '#^Access to an undefined property modBankImport\:\:\$special\.$#'
 			identifier: property.notFound
-			count: 1
-			path: core/modules/modBankImport.class.php
-
-		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
 			count: 1
 			path: core/modules/modBankImport.class.php
 
@@ -893,24 +815,6 @@ parameters:
 			identifier: assign.propertyType
 			count: 1
 			path: core/modules/modBankImport.class.php
-
-		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: import.php
-
-		-
-			message: '#^Function llxFooter not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: import.php
-
-		-
-			message: '#^Function llxHeader not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: import.php
 
 		-
 			message: '#^Parameter \#4 \$month of function dol_mktime expects int, string given\.$#'
@@ -943,18 +847,6 @@ parameters:
 			path: releve.php
 
 		-
-			message: '#^Constant DOL_DOCUMENT_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 9
-			path: releve.php
-
-		-
-			message: '#^Constant DOL_URL_ROOT not found\.$#'
-			identifier: constant.notFound
-			count: 7
-			path: releve.php
-
-		-
 			message: '#^Constant DOL_VERSION not found\.$#'
 			identifier: constant.notFound
 			count: 1
@@ -975,18 +867,6 @@ parameters:
 		-
 			message: '#^Function getListFacture\(\) has parameter \$id_reglement with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: releve.php
-
-		-
-			message: '#^Function llxFooter not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: releve.php
-
-		-
-			message: '#^Function llxHeader not found\.$#'
-			identifier: function.notFound
 			count: 1
 			path: releve.php
 
@@ -1165,12 +1045,6 @@ parameters:
 			path: releve.php
 
 		-
-			message: '#^Constant MAIN_DB_PREFIX not found\.$#'
-			identifier: constant.notFound
-			count: 3
-			path: script/interface.php
-
-		-
 			message: '#^Function _pieceList\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -1193,12 +1067,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: script/interface.php
-
-		-
-			message: '#^Constant MAIN_DB_PREFIX not found\.$#'
-			identifier: constant.notFound
-			count: 1
-			path: tpl/bankimport.check.tpl.php
 
 		-
 			message: '#^Variable \$TTransactions might not be defined\.$#'
@@ -1239,11 +1107,11 @@ parameters:
 		-
 			message: '#^Variable \$form might not be defined\.$#'
 			identifier: variable.undefined
-			count: 6
+			count: 8
 			path: tpl/bankimport.new.tpl.php
 
 		-
 			message: '#^Variable \$import might not be defined\.$#'
 			identifier: variable.undefined
-			count: 5
+			count: 7
 			path: tpl/bankimport.new.tpl.php

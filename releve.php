@@ -247,10 +247,6 @@ else
 	print '<input type="hidden" name="token" value="'.$newToken.'">';
 	print "<input type=\"hidden\" name=\"action\" value=\"add\">";
 
-
-
-	$PDOdb = new TPDOdb;
-
 /*
 
 	print '<td align="center">'.$langs->trans("DateOperationShort").'</td>';
@@ -321,9 +317,9 @@ else
 				print "<tr ".$bc[$var].">";
 
 				// History
-				$bankImportHistory = new TBankImportHistory;
-				$bankImportHistory->load($PDOdb, $objp->historyId);
-				if ($bankImportHistory->getId() > 0)
+				$bankImportHistory = new TBankImportHistory($db);
+				$bankImportHistory->fetch($objp->historyId);
+				if ($bankImportHistory->id > 0)
 				{
 					foreach ($bankImportHistory->line_imported_value as $val)
 					{

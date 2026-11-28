@@ -1,18 +1,19 @@
+<?php
 /* Copyright (C) 2025 ATM Consulting
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program. If not, see <https://www.gnu.org/licenses/>.
-*/
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */?>
 <fieldset>
 	<legend><?php print $langs->trans("ImportBankFile"); ?></legend>
 <form method="post" enctype="multipart/form-data" name="bankimport">
@@ -20,9 +21,9 @@
 	<table class="border" width="100%">
 		<tr>
 			<td width="200"><label class="fieldrequired" for="selectaccountid"><?php echo $langs->trans("BankAccount") ?></label></td>
-			<td><?php  $form->select_comptes( ($import->account) ? $import->account->id : -1,'accountid',0,'courant <> 2',1) ?></td>
+			<td><?php  $form->select_comptes( ($import->account) ? $import->account->id : -1,'accountid',0,'(courant:!=:2)',1) ?></td>
 			<td width="200"><label for="ds"><?php echo $langs->trans("DateStart") ?></label></td>
-			<td><?php echo $form->select_date($import->dateStart, 'ds') ?></td>
+			<td><?php echo method_exists($form, 'selectDate') ? $form->selectDate($import->dateStart, 'ds') : $form->select_date($import->dateStart, 'ds') ?></td>
 			<td><label class="fieldrequired" for="numreleve"><?php echo $langs->trans("AccountStatement") ?></label></td>
 			<td><input type="text" id="numreleve" name="numreleve" value="<?php echo $import->numReleve ?>" /></td>
 		</tr>
@@ -30,7 +31,7 @@
 			<td width="200"><label class="fieldrequired" for="bankimportfile"><?php echo $langs->trans("BankImportFile") ?></label></td>
 			<td><input type="file" id="bankimportfile" name="bankimportfile" /></td>
 			<td width="200"><label for="de"><?php echo $langs->trans("DateEnd") ?></label></td>
-			<td><?php echo $form->select_date($import->dateEnd, 'de') ?></td>
+			<td><?php echo method_exists($form, 'selectDate') ? $form->selectDate($import->dateEnd, 'de') : $form->select_date($import->dateEnd, 'de') ?></td>
 			<td><label for="hasheader"><?php echo $langs->trans("FileHasHeader") ?></label></td>
 			<td><input type="checkbox" id="hasheader" name="hasheader" value="1" <?php echo  getDolGlobalInt('BANKIMPORT_HEADER') ? ' checked="checked"' : '' ?> /></td>
 		</tr>

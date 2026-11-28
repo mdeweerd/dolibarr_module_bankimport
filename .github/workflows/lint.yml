@@ -36,8 +36,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          cache: pip
-          python-version: "3.15"
+          python-version: "3.13"
       - run: python -m pip install pre-commit
       - uses: actions/cache/restore@v6
         with:
@@ -50,12 +49,14 @@ jobs:
           SKIP: php-lint
         run: |
           set -o pipefail
-          pre-commit gc
+          # No pre-commit gc: it fails on the fresh cache of an ephemeral
+          # runner and, with the -e shell of the Actions steps, kills the
+          # job before the hooks run; there is nothing to collect anyway.
           # 2>&1 on purpose: a pre-commit crash prints its traceback on
           # stderr only; the annotations step below needs it in the log.
           pre-commit run --show-diff-on-failure --color=always --all-files 2>&1 | tee ${RAW_LOG}
       - name: Convert Raw Log to Checkstyle format (launch action)
-        uses: mdeweerd/logToCheckStyle@3e43ea94715edbf412c1f51c39c6c0fce55bbec0  # v2026.8.2
+        uses: mdeweerd/logToCheckStyle@b74819f11580d6f201df20f2df04056c3e3356d6  # v2026.11.1
         if: ${{ failure() }}
         with:
           in: ${{ env.RAW_LOG }}
@@ -68,7 +69,7 @@ jobs:
             exit 0
           fi
           sed 's/\x1b\[[0-9;]*m//g' "${RAW_LOG}" > /tmp/pc-clean.log
-          grep -aiE 'error|failed|fail|traceback|invalid' /tmp/pc-clean.log | head -12 > /tmp/pc-lines.log
+          grep -aiE 'error|failed|fail|traceback|invalid' /tmp/pc-clean.log | head -12 > /tmp/pc-lines.log || true
           if [ ! -s /tmp/pc-lines.log ]; then tail -12 /tmp/pc-clean.log > /tmp/pc-lines.log; fi
           cut -c1-400 /tmp/pc-lines.log | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
       - uses: actions/cache/save@v6
