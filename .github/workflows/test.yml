@@ -168,6 +168,15 @@ jobs:
             tar -xzf /tmp/abricot.tar.gz -C "${DOLIBARR_HTDOCS}/custom/abricot" --strip-components=1
             rm -f /tmp/abricot.tar.gz
           fi
+          # The pinned 2015 mirror of abricot reads DOL_PACKAGE
+          # unguarded (inc.core.php) while no Dolibarr core defines
+          # it, and the maintained DoliStore build of the library
+          # ships the guard: apply it here too, so the library also
+          # loads outside its packaging context. Idempotent, and the
+          # library sits inside the instance cache, which earlier
+          # runs may have filled with the unguarded file.
+          sed -i "s/if(DOL_PACKAGE)/if (defined('DOL_PACKAGE') \\&\\& DOL_PACKAGE)/" \
+            "${DOLIBARR_HTDOCS}/custom/abricot/inc.core.php"
 
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.

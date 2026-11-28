@@ -24,9 +24,10 @@ port="${SMOKE_PORT:-8080}"
 log="${SMOKE_LOG:-php-server.log}"
 
 # Through a router on purpose: the built-in server serves from the
-# document root, while the module pages include main.inc.php through
-# paths relative to their own directory. The router moves to the
-# directory of the requested script first, the way Apache serves.
+# directory it was started in, while the module pages include
+# main.inc.php through paths relative to their own directory. The
+# router runs each requested page from the directory of that page,
+# the way Apache serves.
 router="$(cd "$(dirname "$0")" && pwd)/smoke-router.php"
 php -S "127.0.0.1:${port}" -t "${htdocs}" "${router}" > "${log}" 2>&1 &
 server=$!
@@ -82,7 +83,11 @@ for page in "${pages[@]}"; do
 			*/bankimport_setup.php) expect='BANKIMPORT_SEPARATOR' ;;
 		esac
 		if [ -n "${expect}" ] && ! grep -qF -- "${expect}" "${body}"; then
-			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing)"
+			# The page text says what the markers cannot: an empty shell
+			# of main.inc.php, a forbidden zone or an unexpected answer all
+			# look the same without it.
+			text=$(sed 's/<[^>]*>/ /g' "${body}" | tr -s ' \t\n\r' ' ' | cut -c1-160)
+			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing): ${text}"
 			failed=1
 		else
 			echo "  200  ${page}  ($(wc -c < "${body}") bytes)"
