@@ -177,6 +177,19 @@ jobs:
           # runs may have filled with the unguarded file.
           sed -i "s/if(DOL_PACKAGE)/if (defined('DOL_PACKAGE') \\&\\& DOL_PACKAGE)/" \
             "${DOLIBARR_HTDOCS}/custom/abricot/inc.core.php"
+          # The same mirror predates PHP 8.1: two of its files take a
+          # reference to $GLOBALS as a whole (class.tools.php:198,
+          # tbs_class.php:593 and :688, the first one in the TBS
+          # constructor), which PHP 8.1+ rejects when it compiles the
+          # file, so loading inc.core.php dies at activation. Downgrade
+          # all of them to a copy: the loop that reads the constants
+          # only iterates, and the template variables are already set
+          # when the TBS object takes its snapshot. Idempotent, same
+          # cache caveats as the DOL_PACKAGE guard above.
+          sed -i 's/\$temp = &\$GLOBALS;/$temp = $GLOBALS;/' \
+            "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/class.tools.php"
+          sed -E -i 's/\$this->VarRef *= *&+ *\$GLOBALS;/$this->VarRef = $GLOBALS;/' \
+            "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/tbs_class.php"
 
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.

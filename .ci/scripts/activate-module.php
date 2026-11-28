@@ -66,6 +66,29 @@ if (!empty($result['errors'])) {
 
 echo 'Module ' . $rightsclass . ' activated (' . (int) $result['nbmodules'] . ' module(s), ' . (int) $result['nbperms'] . " permission(s))\n";
 
+// The page smoke reads the module pages through the router, and those
+// pages gate their content on isModEnabled(), which reads the const the
+// activation must have written. Verify the row right here: an
+// activation that silently wrote nothing then stops the job at its
+// actual cause instead of at a missing page marker.
+$constname = 'MAIN_MODULE_' . strtoupper($rightsclass);
+$resql = $db->query(
+	"SELECT value, entity FROM " . MAIN_DB_PREFIX . "const"
+	. " WHERE name = '" . $db->escape($constname) . "'"
+	. " AND entity IN (0, " . (int) $conf->entity . ")"
+);
+if (!$resql) {
+	fwrite(STDERR, "Cannot read the " . $constname . " const: " . $db->lasterror() . "\n");
+	exit(1);
+}
+$constrow = $db->fetch_object($resql);
+$db->free($resql);
+if (!$constrow || $constrow->value === null || $constrow->value === '') {
+	fwrite(STDERR, "Activation wrote no " . $constname . " const row: isModEnabled() will stay false on every page.\n");
+	exit(1);
+}
+echo 'Activation const ' . $constname . ' = ' . $constrow->value . ' (entity ' . (int) $constrow->entity . ")\n";
+
 // The CI reads the pages as user 1 (conf.php forces the authentication to
 // that user). A Dolibarr admin does not implicitly hold the rights of a
 // module - User::loadRights() adds only the user-module rights to an

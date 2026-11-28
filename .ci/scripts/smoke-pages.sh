@@ -39,6 +39,13 @@ for _ in $(seq 1 30); do
 	sleep 1
 done
 
+# What the served pages will gate on: a fresh CLI process reads the
+# same instance the way the pages do. A page that answers 200 without
+# its marker while this prints the module on points at the page path,
+# not at the activation, so keep the precheck output next to the
+# failures.
+php "$(dirname "$0")/smoke-precheck.php" || true
+
 # Core pages first, then the pages of the module; the module pages are
 # read as user 1, who holds the module rights after
 # .ci/scripts/activate-module.php granted them the way the Permissions
@@ -86,7 +93,7 @@ for page in "${pages[@]}"; do
 			# The page text says what the markers cannot: an empty shell
 			# of main.inc.php, a forbidden zone or an unexpected answer all
 			# look the same without it.
-			text=$(sed 's/<[^>]*>/ /g' "${body}" | tr -s ' \t\n\r' ' ' | cut -c1-160)
+			text=$(sed 's/<[^>]*>/ /g' "${body}" | tr -s ' \t\n\r' ' ' | cut -c1-340)
 			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing): ${text}"
 			failed=1
 		else
