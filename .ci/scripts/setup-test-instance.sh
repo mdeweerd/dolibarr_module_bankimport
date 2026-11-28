@@ -75,6 +75,12 @@ documents="${DOLIBARR_DOCUMENTS_ROOT}"
 mkdir -p "${documents}/admin/temp" "${DOLIBARR_HTDOCS}/custom"
 chmod -R a+rwX "${documents}"
 
+# The first user of the demo dump (rowid 1) is a plain account - the
+# administrators of the dump sit on later rows - while the setup pages
+# of the module gate on $user->admin. The CI user is promoted the way
+# a real instance promotes its administrator.
+"${mysql[@]}" "${DB_NAME}" -e "UPDATE llx_user SET admin = 1 WHERE rowid = 1;"
+
 # No password is typed in a CI: the pages are read as the first user of
 # the instance (authentication=forceuser), who receives the module
 # rights from .ci/scripts/activate-module.php.
