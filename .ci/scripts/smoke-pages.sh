@@ -93,7 +93,7 @@ for page in "${pages[@]}"; do
 			# The page text says what the markers cannot: an empty shell
 			# of main.inc.php, a forbidden zone or an unexpected answer all
 			# look the same without it.
-			text=$(sed 's/<[^>]*>/ /g' "${body}" | tr -s ' \t\n\r' ' ' | cut -c1-340)
+			text=$(perl -0777 -pe 's/<script\b[^>]*>.*?<\/script>//gs; s/<style\b[^>]*>.*?<\/style>//gs' "${body}" | sed 's/<[^>]*>/ /g' | tr -s ' \t\n\r' ' ' | cut -c1-340)
 			echo "ERROR: ${page} answers 200 without its expected marker ('${expect}' missing): ${text}"
 			failed=1
 		else

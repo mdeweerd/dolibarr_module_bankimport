@@ -190,6 +190,21 @@ jobs:
             "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/class.tools.php"
           sed -E -i 's/\$this->VarRef *= *&+ *\$GLOBALS;/$this->VarRef = $GLOBALS;/' \
             "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/tbs_class.php"
+          # And it predates PHP 8.0 as well: string and array offsets
+          # read with curly braces ($str{0}) stopped compiling on
+          # PHP 8.0 (the form class fatal at its first load), the
+          # form and calendar classes still walk arrays with each(),
+          # and abricot.lib.php builds a callback with
+          # create_function() - all three removed in PHP 8. The
+          # conversions run over every PHP file of the library, are
+          # the mechanical ones the PHP 8 migration guides give,
+          # and are idempotent, same cache caveats as above.
+          find "${DOLIBARR_HTDOCS}/custom/abricot" -name '*.php' -print0 |
+            xargs -0 sed -E -i 's/(\$[A-Za-z_][A-Za-z0-9_]*)\{([^{}]+)\}/\1[\2]/g'
+          find "${DOLIBARR_HTDOCS}/custom/abricot" -name '*.php' -print0 |
+            xargs -0 sed -E -i 's/while ?\(list ?\(([^,()]*) *,? *([^()]*)\) ?= ?each ?\(([^()]*)\) ?\)/foreach (\3 as \1 => \2)/g'
+          sed -i "/create_function/c \$str = preg_replace_callback('/%u([0-9a-f]{4})/i', function (\$arr) { return '&#'.hexdec(\$arr[1]).';'; }, \$str);" \
+            "${DOLIBARR_HTDOCS}/custom/abricot/includes/lib/abricot.lib.php"
 
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.
@@ -259,7 +274,7 @@ jobs:
         run: |
           set -uo pipefail
           if [ ! -s page-smoke.log ]; then exit 0; fi
-          grep -aE 'ERROR:|PHP Fatal|PHP Parse|Uncaught' page-smoke.log | head -12 > /tmp/smoke-lines.log || true
+          grep -aE 'ERROR:|Precheck:|PHP Fatal|PHP Parse|Uncaught' page-smoke.log | head -12 > /tmp/smoke-lines.log || true
           if [ ! -s /tmp/smoke-lines.log ]; then tail -12 page-smoke.log > /tmp/smoke-lines.log; fi
           cut -c1-400 /tmp/smoke-lines.log | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
 
