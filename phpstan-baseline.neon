@@ -1,8 +1,1117 @@
-# PLACEHOLDER: no PHPStan baseline has been generated yet.
-# .github/workflows/analyse.yml detects this file on its first run,
-# replaces it with `phpstan --generate-baseline` and uploads it as an
-# artifact; commit the downloaded file so only new findings fail the
-# job from then on (PLAN.md, Phase 0). Its shrinking size is the
-# progress bar of the port backlog.
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 1
+			path: admin/bankimport_about.php
+
+		-
+			message: '#^Call to function header\(\) with incorrect case\: Header$#'
+			identifier: function.nameCase
+			count: 1
+			path: admin/bankimport_setup.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 6
+			path: admin/bankimport_setup.php
+
+		-
+			message: '#^Negated boolean expression is always true\.$#'
+			identifier: booleanNot.alwaysTrue
+			count: 7
+			path: admin/bankimport_setup.php
+
+		-
+			message: '#^Constant DOL_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Instantiated class RemiseCheque not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Instantiated class User not found\.$#'
+			identifier: class.notFound
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Loose comparison using \=\= between 3 and 2 will always evaluate to false\.$#'
+			identifier: equal.alwaysFalse
+			count: 2
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Loose comparison using \=\= between 3 and 3 will always evaluate to true\.$#'
+			identifier: equal.alwaysTrue
+			count: 2
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:__construct\(\) has parameter \$db with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$accountId with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$dateEnd with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$dateStart with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$filename with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$hasHeader with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:analyse\(\) has parameter \$numReleve with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:cleanString\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:cleanString\(\) has parameter \$strToClean with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:cleanStringForLine\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:cleanStringForLine\(\) has parameter \$strToClean with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:compare_transactions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:construct_data_tab_column_file\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:construct_data_tab_column_file\(\) has parameter \$data with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:construct_data_tab_column_file\(\) has parameter \$mapping with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:createDiscount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:createDiscount\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:create_bank_transaction\(\) has parameter \$fileLine with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$TLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$date_paye with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$fk_payment with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$iFileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$l_societe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPayment\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$TLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$date_paye with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$fk_payment with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$iFileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) has parameter \$l_societe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForCharge\(\) invoked with 0 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$TLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$date_paye with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$fk_payment with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$iFileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFacture\(\) has parameter \$l_societe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$TLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$date_paye with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$fk_payment with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$iFileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:doPaymentForFactureFourn\(\) has parameter \$l_societe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:extractNegDir\(\) has parameter \$matches with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:extractNegDir\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:get_bankline_data\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:get_bankline_data\(\) has parameter \$bankLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:import_data\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:import_data\(\) has parameter \$TLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:insertHistoryLine\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:insertHistoryLine\(\) has parameter \$fk_bank with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:insertHistoryLine\(\) has parameter \$iFileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_bank_transactions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_check_receipt\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_file_transactions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_file_transactions\(\) has parameter \$dateFormat with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_file_transactions\(\) has parameter \$delimiter with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_file_transactions\(\) has parameter \$enclosure with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_file_transactions\(\) has parameter \$mapping_string with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_transactions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_transactions\(\) has parameter \$dateFormat with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_transactions\(\) has parameter \$delimiter with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_transactions\(\) has parameter \$enclosure with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:load_transactions\(\) has parameter \$mapping_string with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:parseHeader\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:parseLine\(\) has parameter \$lineArrayToParse with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:parseLine\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:reconcile_bank_transaction\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:reconcile_bank_transaction\(\) has parameter \$bankLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:reconcile_bank_transaction\(\) has parameter \$fileLine with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:search_dolibarr_transaction_by_amount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:search_dolibarr_transaction_by_amount\(\) has parameter \$amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:search_dolibarr_transaction_by_amount\(\) has parameter \$label with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:search_dolibarr_transaction_by_receipt\(\) has parameter \$amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:search_dolibarr_transaction_by_receipt\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:validateInvoices\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:validateInvoices\(\) has parameter \$TAmounts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method BankImport\:\:validateInvoices\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method TBankImportHistory\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Method TBankImportHistory\:\:fetch\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int \<0 if KO, 0 if not found, \>0 if OK\)\: Unexpected token "if", expected ''\>'' at offset 125 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(int \<0 if KO, id of created object if OK\)\: Unexpected token "if", expected ''\>'' at offset 218 on line 6$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^PHPDoc type array of property TBankImportHistory\:\:\$fields is not covariant with PHPDoc type array\<string, array\{type\: string, label\: string, enabled\: int\<0, 2\>\|string, position\: int, visible\: int\<\-6, 6\>\|string, langfile\?\: string, notnull\?\: int\<\-1, 1\>, noteditable\?\: int\<0, 1\>, \.\.\.\}\> of overridden property CommonObject\:\:\$fields\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function preg_replace_callback expects callable\(array\<string\>\)\: string, ''BankImport\:…'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Parameter \#3 \$length of function substr expects int\|null, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$TBank has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$TCheckReceipt has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$TFile has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$TOriginLine has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$dateEnd has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$dateStart has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$db has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$file has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$hasHeader has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$lineHeader has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$nbCreated has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$nbReconciled has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property BankImport\:\:\$numReleve has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Property TBankImportHistory\:\:\$fields type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 2
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Undefined variable\: \$langs$#'
+			identifier: variable.undefined
+			count: 1
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Variable \$amount_ht might not be defined\.$#'
+			identifier: variable.undefined
+			count: 3
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Variable \$amount_ttc might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Variable \$amount_tva might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: class/bankimport.class.php
+
+		-
+			message: '#^Access to an undefined property bankimport\\TechATM\:\:\$data\.$#'
+			identifier: property.notFound
+			count: 2
+			path: class/techatm.class.php
+
+		-
+			message: '#^Constant DOL_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:getAboutPage\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:getAboutPage\(\) has parameter \$useCache with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:getLastModuleVersionUrl\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:getModuleDocUrl\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:http_response_code_msg\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:http_response_code_msg\(\) has parameter \$code with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:parseHeaders\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Method bankimport\\TechATM\:\:parseHeaders\(\) has parameter \$headers with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: class/techatm.class.php
+
+		-
+			message: '#^Property bankimport\\TechATM\:\:\$http_response_header \(bankimport\\http_response_header\) does not accept list\<string\>\.$#'
+			identifier: assign.propertyType
+			count: 2
+			path: class/techatm.class.php
+
+		-
+			message: '#^Path in include\(\) "\.\./\.\./\.\./master\.inc\.php" is not a file or it does not exist\.$#'
+			identifier: include.fileNotFound
+			count: 1
+			path: config.default.php
+
+		-
+			message: '#^Path in include\(\) "\.\./\.\./master\.inc\.php" is not a file or it does not exist\.$#'
+			identifier: include.fileNotFound
+			count: 1
+			path: config.default.php
+
+		-
+			message: '#^Path in include\(\) "\.\./master\.inc\.php" is not a file or it does not exist\.$#'
+			identifier: include.fileNotFound
+			count: 1
+			path: config.default.php
+
+		-
+			message: '#^Access to an undefined property modBankImport\:\:\$special\.$#'
+			identifier: property.notFound
+			count: 1
+			path: core/modules/modBankImport.class.php
+
+		-
+			message: '#^Parameter \#1 \$moduleDescriptor of static method bankimport\\TechATM\:\:getLastModuleVersionUrl\(\) expects bankimport\\DolibarrModules, \$this\(modBankImport\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: core/modules/modBankImport.class.php
+
+		-
+			message: '#^Property DolibarrModules\:\:\$const \(array\<array\{0\: string, 1\: string, 2\: int\|string, 3\?\: string, 4\?\: int\<0, 1\>, 5\?\: string, 6\?\: int\<0, 1\>\}\>\) does not accept array\{array\{''BANKIMPORT_MAPPING'', ''chaine'', ''date;label;debit…'', ''CSV file mapping…'', 1, ''current'', 0\}, array\{''BANKIMPORT_SEPARATOR'', ''chaine'', '';'', ''Data separator for…'', 1, ''current'', 0\}, array\{''BANKIMPORT_DATE…'', ''chaine'', ''d/m/Y'', ''Date format in CSV…'', 1, ''current'', 0\}, array\{''BANKIMPORT_HEADER'', ''bool'', true, ''File header line…'', 1, ''current'', 0\}\}\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: core/modules/modBankImport.class.php
+
+		-
+			message: '#^Parameter \#4 \$month of function dol_mktime expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: import.php
+
+		-
+			message: '#^Parameter \#5 \$day of function dol_mktime expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: import.php
+
+		-
+			message: '#^Parameter \#6 \$year of function dol_mktime expects int, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: import.php
+
+		-
+			message: '#^Function bankimportAdminPrepareHead\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: lib/bankimport.lib.php
+
+		-
+			message: '#^Class Tva referenced with incorrect case\: TVA\.$#'
+			identifier: class.nameCase
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Constant DOL_VERSION not found\.$#'
+			identifier: constant.notFound
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function getListFacture\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function getListFacture\(\) has parameter \$fourn with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function getListFacture\(\) has parameter \$id_reglement with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$acct with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$banklinestatic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$bankstatic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$db with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$langs with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$num with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$objp with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$paymentstatic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$paymentsupplierstatic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$paymentvatstatic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$totalc with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$totald with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printStandardValues\(\) has parameter \$user with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableFooter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableFooter\(\) has parameter \$title_serialize with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableFooter\(\) has parameter \$total with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableFooter\(\) has parameter \$totalc with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableFooter\(\) has parameter \$totald with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableHeader\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableHeader\(\) has parameter \$acct_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableHeader\(\) has parameter \$title_serialize with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Function printTableHeader\(\) has parameter \$total with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Undefined variable\: \$conf$#'
+			identifier: variable.undefined
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Undefined variable\: \$total$#'
+			identifier: variable.undefined
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Undefined variable\: \$ve$#'
+			identifier: variable.undefined
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Variable \$bc might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: releve.php
+
+		-
+			message: '#^Variable \$param might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: releve.php
+
+		-
+			message: '#^Variable \$total might not be defined\.$#'
+			identifier: variable.undefined
+			count: 4
+			path: releve.php
+
+		-
+			message: '#^Function _pieceList\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: script/interface.php
+
+		-
+			message: '#^Function _pieceList\(\) has parameter \$fk_soc with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: script/interface.php
+
+		-
+			message: '#^Function _pieceList\(\) has parameter \$i with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: script/interface.php
+
+		-
+			message: '#^Function _pieceList\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: script/interface.php
+
+		-
+			message: '#^Variable \$TTransactions might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: tpl/bankimport.check.tpl.php
+
+		-
+			message: '#^Variable \$bc might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: tpl/bankimport.check.tpl.php
+
+		-
+			message: '#^Variable \$form might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: tpl/bankimport.check.tpl.php
+
+		-
+			message: '#^Variable \$import might not be defined\.$#'
+			identifier: variable.undefined
+			count: 13
+			path: tpl/bankimport.check.tpl.php
+
+		-
+			message: '#^Variable \$var might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: tpl/bankimport.check.tpl.php
+
+		-
+			message: '#^Variable \$import might not be defined\.$#'
+			identifier: variable.undefined
+			count: 11
+			path: tpl/bankimport.end.tpl.php
+
+		-
+			message: '#^Variable \$form might not be defined\.$#'
+			identifier: variable.undefined
+			count: 8
+			path: tpl/bankimport.new.tpl.php
+
+		-
+			message: '#^Variable \$import might not be defined\.$#'
+			identifier: variable.undefined
+			count: 7
+			path: tpl/bankimport.new.tpl.php
