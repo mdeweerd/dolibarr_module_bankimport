@@ -79,7 +79,6 @@ return [
 		'dolibarr/htdocs/fourn/class',
 		'dolibarr/htdocs/societe/class',
 		'dolibarr/htdocs/adherents/class',
-		'dolibarr/htdocs/custom/abricot/includes/class',
 		// Analysed.
 		'admin',
 		'class',

@@ -11,7 +11,7 @@ BankImportSeparator = Separador de datos en el archivo CSV
 BankImportMapping = Mapeo de columnas del archivo CSV
 BankImportDateFormat = Formato de fecha del archivo CSV
 BankImportSeparatorHelp = Carácter usado como separador de columnas en el archivo CSV. (Habitualmente "," o ";". Un sólo carácter)
-BankImportMappingHelp = Correspondencia de cada columna en su archivo CSV con un "concepto bancario clave en Dolibarr" (usando las siguientes palabras clave).<br><br>Los códigos "date", "label", "debit" and "credit" deben existir en este mapeo de datos.<br><br>Si su archivo contiene una única columna para el importe, utilice “amount” y posiblemente "direction=Debit token" (eg. "direction=DEBIT" or "direction=-") en lugar de "debit" y "credit".<br><br>Si su archivo contiene otras columnas, nombrelas “null” en este mapeo. 
+BankImportMappingHelp = Correspondencia de cada columna en su archivo CSV con un "concepto bancario clave en Dolibarr" (usando las siguientes palabras clave).<br><br>Los códigos "date", "label", "debit" and "credit" deben existir en este mapeo de datos.<br><br>Si su archivo contiene una única columna para el importe, utilice “amount” y posiblemente "direction=Debit token" (eg. "direction=DEBIT" or "direction=-") en lugar de "debit" y "credit".<br><br>Si su archivo contiene otras columnas, nombrelas “null” en este mapeo.
 BankImportDateFormatHelp = Formato de fecha usado en su archivo CSV ("d" es el día en dos caracteres, "m" mes en dos caracteres, "Y" año en cuatro carácteres, "y" año en dos carácteres, etc... son formatos de fecha habituales de PHP).<br><br>Por ejemplo, la fecha 07/25/2013 se corresponde con el formato de fecha "m/d/Y".
 
 bankImportUseHistory = Activar el registro de importaciones con el contenido del archivo (<b>Advertencia: una línea de encabezado debe estar presente en su archivo</b>)
@@ -64,3 +64,7 @@ bankimport_customer_selected_click_to_select_another_one = %s (pulse aquí para 
 Action = Acción prevista
 BankImportAboutPage = Acerca del módulo de importación de bancos
 ImportBankFile = Importación de ficheros bancarios
+
+ErrorDateStartNotSelected = La fecha de inicio no está seleccionada
+ErrorDateEndNotSelected = La fecha de finalización no está seleccionada
+ErrorDateFormatNotValid = El formato de fecha no es válido

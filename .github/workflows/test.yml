@@ -26,11 +26,6 @@ env:
   MODULE: bankimport
   MODULE_CLASS: modBankImport
   RIGHTS_CLASS: bankimport
-  # The abricot library the module loads at activation and on its
-  # pages (TPDOdb, TObjetStd). The ATM upstream repository is not
-  # fetchable anymore; the pinned public mirror below carries the
-  # same core (see PLAN.md).
-  ABRICOT_REF: "1acc35a1f3aabf41aa1888c41d6359d374b34dc4"
 
   DB_HOST: 127.0.0.1
   DB_PORT: "3306"
@@ -153,58 +148,6 @@ jobs:
           set -uo pipefail
           if [ ! -s setup-test-instance.log ]; then exit 0; fi
           tail -12 setup-test-instance.log | cut -c1-400 | while IFS= read -r line; do printf '::error::%s\n' "${line}"; done
-
-      # The module loads abricot at activation and on its pages; the
-      # restore key may predate the abricot pin, so the download runs
-      # whenever the library is missing.
-      - name: Deploy abricot into the Dolibarr tree (when missing)
-        run: |
-          set -euo pipefail
-          if [ ! -f "${DOLIBARR_HTDOCS}/custom/abricot/inc.core.php" ]; then
-            mkdir -p "${DOLIBARR_HTDOCS}/custom/abricot"
-            curl -fsSL --retry 5 --retry-delay 5 --retry-all-errors \
-              -o /tmp/abricot.tar.gz \
-              "https://codeload.github.com/GPCsolutions/abricot/tar.gz/${ABRICOT_REF}"
-            tar -xzf /tmp/abricot.tar.gz -C "${DOLIBARR_HTDOCS}/custom/abricot" --strip-components=1
-            rm -f /tmp/abricot.tar.gz
-          fi
-          # The pinned 2015 mirror of abricot reads DOL_PACKAGE
-          # unguarded (inc.core.php) while no Dolibarr core defines
-          # it, and the maintained DoliStore build of the library
-          # ships the guard: apply it here too, so the library also
-          # loads outside its packaging context. Idempotent, and the
-          # library sits inside the instance cache, which earlier
-          # runs may have filled with the unguarded file.
-          sed -i "s/if(DOL_PACKAGE)/if (defined('DOL_PACKAGE') \\&\\& DOL_PACKAGE)/" \
-            "${DOLIBARR_HTDOCS}/custom/abricot/inc.core.php"
-          # The same mirror predates PHP 8.1: two of its files take a
-          # reference to $GLOBALS as a whole (class.tools.php:198,
-          # tbs_class.php:593 and :688, the first one in the TBS
-          # constructor), which PHP 8.1+ rejects when it compiles the
-          # file, so loading inc.core.php dies at activation. Downgrade
-          # all of them to a copy: the loop that reads the constants
-          # only iterates, and the template variables are already set
-          # when the TBS object takes its snapshot. Idempotent, same
-          # cache caveats as the DOL_PACKAGE guard above.
-          sed -i 's/\$temp = &\$GLOBALS;/$temp = $GLOBALS;/' \
-            "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/class.tools.php"
-          sed -E -i 's/\$this->VarRef *= *&+ *\$GLOBALS;/$this->VarRef = $GLOBALS;/' \
-            "${DOLIBARR_HTDOCS}/custom/abricot/includes/class/tbs_class.php"
-          # And it predates PHP 8.0 as well: string and array offsets
-          # read with curly braces ($str{0}) stopped compiling on
-          # PHP 8.0 (the form class fatal at its first load), the
-          # form and calendar classes still walk arrays with each(),
-          # and abricot.lib.php builds a callback with
-          # create_function() - all three removed in PHP 8. The
-          # conversions run over every PHP file of the library, are
-          # the mechanical ones the PHP 8 migration guides give,
-          # and are idempotent, same cache caveats as above.
-          find "${DOLIBARR_HTDOCS}/custom/abricot" -name '*.php' -print0 |
-            xargs -0 sed -E -i 's/(\$[A-Za-z_][A-Za-z0-9_]*)\{([^{}]+)\}/\1[\2]/g'
-          find "${DOLIBARR_HTDOCS}/custom/abricot" -name '*.php' -print0 |
-            xargs -0 sed -E -i 's/while ?\(list ?\(([^,()]*) *,? *([^()]*)\) ?= ?each ?\(([^()]*)\) ?\)/foreach (\3 as \1 => \2)/g'
-          sed -i "/create_function/c \$str = preg_replace_callback('/%u([0-9a-f]{4})/i', function (\$arr) { return '&#'.hexdec(\$arr[1]).';'; }, \$str);" \
-            "${DOLIBARR_HTDOCS}/custom/abricot/includes/lib/abricot.lib.php"
 
       # The module lives at the root of this repository: the whole
       # checkout is the module, deployed the way a developer does it.
